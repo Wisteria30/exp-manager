@@ -1,0 +1,10 @@
+# mac
+__pycache__
+.DS_Store
+.mypy_cache
+
+# data_dir
+repo/*
+
+# 追跡したいファイル
+!.gitkeep
