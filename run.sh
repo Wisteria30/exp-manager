@@ -1,5 +1,4 @@
 #!/bin/bash
-# set -eux
 set -e
 
 FROM_DIR=${PWD}/repo/
@@ -65,22 +64,25 @@ for host in ${TO_HOSTS[@]}; do
     rsync -archvz ${FROM_DIR} ${host}:${TO_DIR}
 done
 
-# 複数ホストに対して、setup_commandとexecute_commandをノードの数だけ実行する
+# 複数ホストに対して、setup_commandの実行とexecute_commandをノードの数だけ実行する
 for ((i=0; i<${#NODES[@]}; i++)); do
     echo ""
+    sed -i -e '/^$/d' ${SETUP_PATH}
     # if setup_command is exists or not blank, executed
-    if [ -f ${SETUP_PATH} ]; then
+    if [ -f ${SETUP_PATH} ] && [ -s ${SETUP_PATH} ]; then
         setup_command=`cat ${SETUP_PATH}`
         echo "setup_command: ${setup_command}"
         ssh ${TO_HOSTS[${i}]} "nohup bash -c 'cd ${WORK_DIR}; ${setup_command}' > tmp.txt 2>&1 &"
     fi
     # if execute_command is exists or not blank, executed
-    if [ -f ${EXECUTE_PATH} ]; then
+    sed -i -e '/^$/d' ${EXECUTE_PATH}
+    echo `cat ${EXECUTE_PATH}`
+    if [ -f ${EXECUTE_PATH} ] && [ -s ${EXECUTE_PATH} ]; then
         execute_command=''
         for ((j=0; j<${NODES[i]}; j++)); do
-            execute_command+="`cat ${EXECUTE_PATH}`; "
+            execute_command+="`cat ${EXECUTE_PATH}`& "
         done
         echo "execute command on ${TO_HOSTS[i]} x ${NODES[i]}"
-        ssh ${TO_HOSTS[${i}]} "nohup bash -c 'cd ${WORK_DIR}; ${execute_command}' > tmp.txt 2>&1 &" &
+        ssh ${TO_HOSTS[${i}]} "nohup bash -c 'cd ${WORK_DIR}; ${execute_command}' > /dev/null 2>&1 &" &
     fi
 done

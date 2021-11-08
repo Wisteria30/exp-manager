@@ -3,6 +3,9 @@ __pycache__
 .DS_Store
 .mypy_cache
 
+execute_command.txt-e
+setup_command.txt-e
+
 # data_dir
 repo/*
 
