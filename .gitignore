@@ -3,6 +3,10 @@ __pycache__
 .DS_Store
 .mypy_cache
 
+node.txt
+execute_command.txt
+setup_command.txt
+
 execute_command.txt-e
 setup_command.txt-e
 

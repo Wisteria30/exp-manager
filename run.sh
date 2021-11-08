@@ -67,7 +67,7 @@ done
 # 複数ホストに対して、setup_commandの実行とexecute_commandをノードの数だけ実行する
 for ((i=0; i<${#NODES[@]}; i++)); do
     echo ""
-    sed -i -e '/^$/d' ${SETUP_PATH}
+    sed -i "" -e '/^$/d' ${SETUP_PATH}
     # if setup_command is exists or not blank, executed
     if [ -f ${SETUP_PATH} ] && [ -s ${SETUP_PATH} ]; then
         setup_command=`cat ${SETUP_PATH}`
@@ -75,7 +75,7 @@ for ((i=0; i<${#NODES[@]}; i++)); do
         ssh ${TO_HOSTS[${i}]} "nohup bash -c 'cd ${WORK_DIR}; ${setup_command}' > tmp.txt 2>&1 &"
     fi
     # if execute_command is exists or not blank, executed
-    sed -i -e '/^$/d' ${EXECUTE_PATH}
+    sed -i "" -e '/^$/d' ${EXECUTE_PATH}
     echo `cat ${EXECUTE_PATH}`
     if [ -f ${EXECUTE_PATH} ] && [ -s ${EXECUTE_PATH} ]; then
         execute_command=''
